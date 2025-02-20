@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\LoginRequest;
-use Illuminate\Http\Request;
 use App\Models\User;
 
 class AuthController extends Controller
@@ -11,7 +10,7 @@ class AuthController extends Controller
     public function login(LoginRequest $request)
     {
         $input = $request->validated();
-        
+
         $credentials = request(['email', 'password']);
 
         if (! $token = auth()->attempt($credentials)) {
@@ -20,7 +19,8 @@ class AuthController extends Controller
 
         return $this->respondWithToken($token);
     }
-      /**
+
+    /**
      * Get the authenticated User.
      *
      * @return \Illuminate\Http\JsonResponse
@@ -55,8 +55,7 @@ class AuthController extends Controller
     /**
      * Get the token array structure.
      *
-     * @param  string $token
-     *
+     * @param  string  $token
      * @return \Illuminate\Http\JsonResponse
      */
     protected function respondWithToken($token)
@@ -65,7 +64,7 @@ class AuthController extends Controller
             'access_token' => $token,
             'token_type' => 'bearer',
             'expires_in' => auth()->factory()->getTTL() * 60,
-            'user' => auth()->user()
+            'user' => auth()->user(),
         ]);
     }
 }
