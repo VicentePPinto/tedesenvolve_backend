@@ -27,6 +27,26 @@ services:
             - meilisearch
             - mailpit
             - selenium
+    pgsql:
+        image: 'postgres:alpine'
+        ports:
+            - '5436:5432'
+        environment:
+            POSTGRES_DB: 'testdb'
+            POSTGRES_USER: 'laravel_test'
+            POSTGRES_PASSWORD: 'test'
+        volumes:
+            - 'sail-pgsql:/var/lib/postgresql/data'
+        networks:
+            - sail
+        healthcheck:
+            test:
+                [
+                    "CMD-SHELL",
+                    "pg_isready -U ${DB_USERNAME} -d ${DB_DATABASE}"
+                ]
+            retries: 3
+            timeout: 5s
     mysql:
         image: 'mysql/mysql-server:8.0'
         ports:
@@ -51,6 +71,8 @@ services:
                 - '-p${DB_PASSWORD}'
             retries: 3
             timeout: 5s
+   
+          
     redis:
         image: 'redis:alpine'
         ports:
@@ -109,4 +131,6 @@ volumes:
     sail-redis:
         driver: local
     sail-meilisearch:
+        driver: local
+    sail-pgsql:
         driver: local

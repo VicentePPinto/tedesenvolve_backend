@@ -7,13 +7,11 @@ use App\Models\User;
 
 class AuthController extends Controller
 {
-    public function login(LoginRequest $request)
+    public function login(LoginRequest $loginRequest)
     {
-        $input = $request->validated();
+        $login = $loginRequest->all();
 
-        $credentials = request(['email', 'password']);
-
-        if (! $token = auth()->attempt($credentials)) {
+        if (! $token = auth()->attempt($login)) {
             return response()->json(['error' => 'Unauthorized'], 401);
         }
 
