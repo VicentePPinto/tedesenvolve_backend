@@ -2,11 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\UserRequest;
+use App\Http\Resources\UserResource;
 use App\Models\User;
-use Illuminate\Http\Request;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 class UserController extends Controller
 {
+    use AuthorizesRequests;
+
     /**
      * Display a listing of the resource.
      */
@@ -14,15 +18,19 @@ class UserController extends Controller
     {
         //
         $users = User::all();
+
         return response()->json($users);
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(UserRequest $user_request)
     {
         //
+        $user = User::create($user_request->all());
+
+        return response()->json($user, 201);
     }
 
     /**
@@ -31,21 +39,31 @@ class UserController extends Controller
     public function show(string $id)
     {
         //
+        return new UserResource(User::findOrFail($id));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(UserRequest $userRequest, User $user)
     {
-        //
+
+        $this->authorize('update', $user);
+        $validated = $userRequest->validated();
+        $user->update($validated);
+
+        return UserResource::make($user);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(User $user)
     {
-        //
+        $this->authorize('delete', $user);
+
+        $user->delete();
+
+        return response()->json(['message' => 'Usuário deletado com sucesso.'], 204);
     }
 }
