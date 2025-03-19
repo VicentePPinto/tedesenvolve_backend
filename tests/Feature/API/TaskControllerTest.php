@@ -96,6 +96,7 @@ class TaskControllerTest extends TestCase
         $response->assertStatus(403);
 
     }
+
     public function test_admin_pode_criar_task_para_user()
     {
 
@@ -141,6 +142,7 @@ class TaskControllerTest extends TestCase
                 ],
             ]);
     }
+
     public function test_user_nao_pode_atualizar_tarefas_de_outro_user()
     {
         // Gerar um token JWT para o admin
@@ -159,6 +161,7 @@ class TaskControllerTest extends TestCase
         // Verificar se a API permitiu e retornou status 200
         $response->assertStatus(403);
     }
+
     public function test_admin_pode_atualizar_tarefas_de_user()
     {
         // Gerar um token JWT para o admin
@@ -183,7 +186,7 @@ class TaskControllerTest extends TestCase
                 ],
             ]);
     }
-    
+
     public function test_usuario_pode_excluir_suas_tarefas()
     {
         // Gerar um token JWT para o admin
@@ -199,6 +202,7 @@ class TaskControllerTest extends TestCase
         // Verificar se a API permitiu e retornou status 200
         $response->assertStatus(204);
     }
+
     public function test_usuario_nao_pode_excluir_tarefas_de_outro_user()
     {
         // Gerar um token JWT para o admin
@@ -214,6 +218,7 @@ class TaskControllerTest extends TestCase
         // Verificar se a API permitiu e retornou status 200
         $response->assertStatus(403);
     }
+
     public function test_admin_pode_excluir_tarefas_de_user()
     {
         // Gerar um token JWT para o admin
