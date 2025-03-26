@@ -33,5 +33,6 @@ class AuthServiceProvider extends ServiceProvider
 
         // Registrar a política para o modelo User
         Gate::policy(User::class, UserPolicy::class);
+        Gate::policy(Task::class, TaskPolicy::class);
     }
 }

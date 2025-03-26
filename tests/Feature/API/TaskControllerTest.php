@@ -41,10 +41,10 @@ class TaskControllerTest extends TestCase
         $this->user2 = User::factory()->create(['type' => 'user']);
     }
 
-    public function test_usuario_pode_verificar_suas_tarefas(): void
+    public function test_usuario_admin_pode_verificar_todas_tarefas(): void
     {
         // Gerar um token JWT para o usuário
-        $token = JWTAuth::fromUser($this->user);
+        $token = JWTAuth::fromUser($this->admin);
 
         // Enviar a requisição autenticada
         $response = $this->withHeaders([
@@ -120,27 +120,27 @@ class TaskControllerTest extends TestCase
 
     public function test_user_pode_atualizar_suas_tarefas()
     {
-        // Gerar um token JWT para o admin
-        $token = JWTAuth::fromUser($this->user);
-        // Criar um usuário admin
-        $task = Task::factory()->create(['user_id' => $this->user->id]);
-
-        // Novos dados para atualização
-        $task->title = 'Tarefa Update';
-
-        // Fazer a requisição autenticada com o admin
-        $response = $this->withHeaders([
-            'Authorization' => "Bearer $token",
-        ])->patchJson("/api/task/{$task->id}", $task->toArray());
-
-        // Verificar se a API permitiu e retornou status 200
-        $response->assertStatus(200)
-            ->assertJson([
-                'data' => [
-                    'id' => $task->id,
-                    'title' => 'Tarefa Update',
-                ],
-            ]);
+         // Gerar um token JWT para o admin
+         $token = JWTAuth::fromUser($this->user);
+         // Criar um usuário admin
+         $task = Task::factory()->create(['user_id' => $this->user->id]);
+ 
+         // Novos dados para atualização
+         $task->title = 'Tarefa Update';
+ 
+         // Fazer a requisição autenticada com o admin
+         $response = $this->withHeaders([
+             'Authorization' => "Bearer $token",
+         ])->patchJson("/api/task/{$task->id}", $task->toArray());
+ 
+         // Verificar se a API permitiu e retornou status 200
+         $response->assertStatus(200)
+             ->assertJson([
+                 'data' => [
+                     'id' => $task->id,
+                     'title' => 'Tarefa Update',
+                 ],
+             ]);
     }
 
     public function test_user_nao_pode_atualizar_tarefas_de_outro_user()
@@ -233,5 +233,31 @@ class TaskControllerTest extends TestCase
 
         // Verificar se a API permitiu e retornou status 200
         $response->assertStatus(204);
+    }
+
+    public function test_usuario_pode_verificar_suas_tarefas_em_periodo()
+    {
+        // Gerar um token JWT para o usuário
+        $token = JWTAuth::fromUser($this->user);
+
+        $task = Task::factory(10)->create(['user_id' => $this->user->id, 'due_date' => now()->subDays(5), 'created_at' => now()->subDays(10)]);  
+
+        $newTaskData = [
+            'start_date' => now()->subDays(10)->format('Y-m-d'),
+            'end_date' => now()->format('Y-m-d'),
+            'user_id' => $this->user->id,
+        ];
+       // dd($newTaskData);
+        // Enviar a requisição autenticada
+        $response = $this->withHeaders([
+            'Authorization' => "Bearer $token",
+        ])->postJson('/api/getTasksInPeriod', $newTaskData);
+            //dd($response);
+        // Verificar resposta
+        $response->assertStatus(200);
+        $this->assertDatabaseHas('tasks', [
+            'user_id' => $this->user->id,
+            'created_at' => now()->subDays(10), // Ou use um intervalo adequado
+        ]);
     }
 }

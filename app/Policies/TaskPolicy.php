@@ -7,28 +7,42 @@ use App\Models\User;
 
 class TaskPolicy
 {
-    /**
-     * Determine whether the user can view any models.
-     */
-    public function viewAny(User $user): bool
-    {
-        return false;
-    }
 
     /**
      * Determine whether the user can view the model.
      */
-    public function index(User $user, Task $task): bool
+    public function index(User $authUser, Task $task): bool
     {
         return false;
+        return $this->canAccessTask($authUser, $task);
     }
 
     /**
      * Determine whether the user can create models.
      */
-    public function create(User $authUser): bool
+    public function create(User $user, array $data): bool
+{
+    return $user->type === 'admin' || $user->id === $data['user_id'];
+}
+
+    /**
+     * Determine whether the user can view the model.
+     */
+    public function view( Task $task): bool
     {
-        return $authUser->type === 'admin' || request()->user_id == $authUser->id;
+        
+        $authUser = auth()->user();
+        return $this->canAccessTask($authUser, $task);
+    }
+    /**
+     * Determine whether the user can view the model.
+     */
+    public function viewAny(): bool
+    {
+  
+        $authUser = auth()->user();
+   
+        return $authUser->type === 'admin';
     }
 
     /**
@@ -36,7 +50,7 @@ class TaskPolicy
      */
     public function update(User $authUser, Task $task): bool
     {
-        return $authUser->id === $task->user_id || $authUser->type === 'admin';
+        return $this->canAccessTask($authUser, $task);
     }
 
     /**
@@ -44,7 +58,7 @@ class TaskPolicy
      */
     public function delete(User $authUser, Task $task): bool
     {
-        return $authUser->id === $task->user_id || $authUser->type === 'admin';
+        return $this->canAccessTask($authUser, $task);
     }
 
     /**
@@ -61,5 +75,19 @@ class TaskPolicy
     public function forceDelete(User $user, Task $task): bool
     {
         return false;
+    }
+
+    public function getTasksInPeriod(User $user, array $data): bool
+    {
+        
+        return $user->type === 'admin' || $user->id === $data['user_id'];
+    }
+
+    /**
+     * Regra centralizada de acesso a uma tarefa.
+     */
+    private function canAccessTask(User $user, Task $task): bool
+    {
+        return $user->type == 'admin' || $user->id === $task->user_id;
     }
 }

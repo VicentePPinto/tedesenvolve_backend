@@ -3,19 +3,28 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\TaskRequest;
+use App\Http\Requests\TaskUserRequest;
 use App\Http\Resources\TaskResource;
 use App\Models\Task;
+use App\Services\TaskService;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
-
 class TaskController extends Controller
 {
     use AuthorizesRequests;
+    protected TaskService $taskService;
+
+    public function __construct(TaskService $taskService)
+    {
+        $this->taskService = $taskService;
+    }
 
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
+      
+        $this->authorize('viewAny', Task::class);
         $tasks = Task::all();
 
         return response()->json($tasks);
@@ -26,7 +35,9 @@ class TaskController extends Controller
      */
     public function store(TaskRequest $taskRequest)
     {
-        //
+             
+        $this->authorize('create', [Task::class, $taskRequest->validated()]);
+    
         $task = Task::create($taskRequest->all());
 
         return response()->json($task, 201);
@@ -39,6 +50,7 @@ class TaskController extends Controller
     public function show(Task $task)
     {
         //
+        $this->authorize('view', $task);
         return new TaskResource($task);
     }
 
@@ -48,7 +60,7 @@ class TaskController extends Controller
     public function update(TaskRequest $TaskRequest, Task $task)
     {
         //
-        $this->authorize('update', $task);
+        $this->authorize('update', [Task::class, $task]);
         $validated = $TaskRequest->validated();
         $task->update($validated);
 
@@ -66,5 +78,18 @@ class TaskController extends Controller
         $task->delete();
 
         return response()->json(null, 204);
+    }
+    public function getTasksInPeriod( TaskUserRequest $taskUserRequest)
+    {
+        
+        $this->authorize('getTasksInPeriod', [Task::class, $taskUserRequest->validated()]);
+
+    $tasks = $this->taskService->getUserTasksInPeriod(
+        $taskUserRequest->user_id,
+        $taskUserRequest->getStartDate(),
+        $taskUserRequest->getEndDate()
+    );
+
+    return TaskResource::collection($tasks);
     }
 }

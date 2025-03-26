@@ -11,7 +11,7 @@ class TaskRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return auth()->user()->can('create', \App\Models\Task::class);
+        return true;
     }
 
     /**

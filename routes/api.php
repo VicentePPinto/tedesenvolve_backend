@@ -15,5 +15,5 @@ Route::get('test', function () {
 Route::middleware([JwtMiddleware::class])->group(function () {
     Route::apiResource('task', TaskController::class);
     Route::apiResource('user', UserController::class);
-
+    Route::post('getTasksInPeriod', [TaskController::class, 'getTasksInPeriod']);
 });
