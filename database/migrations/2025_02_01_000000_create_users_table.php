@@ -19,6 +19,10 @@ return new class() extends Migration
             $table->string('password');
             $table->string('avatar')->nullable();
             $table->string('type');
+            $table->foreignId('company_id')
+                ->constrained()
+                ->onUpdate('CASCADE')
+                ->onDelete('CASCADE');
             $table->rememberToken();
             $table->timestamps();
         });

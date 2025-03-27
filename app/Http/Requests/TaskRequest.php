@@ -29,6 +29,7 @@ class TaskRequest extends FormRequest
             'task_state_id' => ['required', 'exists:task_states,id'],
             'task_category_id' => ['required', 'exists:task_categories,id'],
             'user_id' => ['required', 'exists:users,id'],
+            'company_id' => ['required', 'exists:companies,id'],
         ];
     }
 }

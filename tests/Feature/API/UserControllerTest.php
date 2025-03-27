@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\API;
 
+use App\Models\Company;
 use App\Models\User;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Tests\TestCase;
@@ -10,6 +11,23 @@ use Tymon\JWTAuth\Facades\JWTAuth;
 class UserControllerTest extends TestCase
 {
     use DatabaseMigrations;
+
+    private Company $company;
+
+    private Company $company2;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+        $this->criarDadosIniciais();
+    }
+
+    private function criarDadosIniciais(): void
+    {
+        // Criar a companhia
+        $this->company = Company::factory()->create();
+        $this->company2 = Company::factory()->create();
+    }
 
     /**
      * A basic feature test example.

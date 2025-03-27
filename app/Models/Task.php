@@ -17,6 +17,7 @@ class Task extends Model
         'task_state_id',
         'task_category_id',
         'user_id',
+        'company_id',
     ];
 
     public function taskCategory()
@@ -27,6 +28,11 @@ class Task extends Model
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function company(): BelongsTo
+    {
+        return $this->belongsTo(Company::class);
     }
 
     public function category(): BelongsTo

@@ -2,14 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\TaskState;
-use App\Models\Traits\HasCompanyScope;
+use App\Models\Company;
 use Illuminate\Http\Request;
 
-class TaskStateController extends Controller
+class CompanyController extends Controller
 {
-    use HasCompanyScope;
-
     /**
      * Display a listing of the resource.
      */
@@ -37,7 +34,7 @@ class TaskStateController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(TaskState $taskState)
+    public function show(Company $company)
     {
         //
     }
@@ -45,7 +42,7 @@ class TaskStateController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(TaskState $taskState)
+    public function edit(Company $company)
     {
         //
     }
@@ -53,7 +50,7 @@ class TaskStateController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, TaskState $taskState)
+    public function update(Request $request, Company $company)
     {
         //
     }
@@ -61,7 +58,7 @@ class TaskStateController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(TaskState $taskState)
+    public function destroy(Company $company)
     {
         //
     }

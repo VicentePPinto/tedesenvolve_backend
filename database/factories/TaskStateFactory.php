@@ -21,6 +21,7 @@ class TaskStateFactory extends Factory
     {
         return [
             'state' => $this->faker->word,
+            'company_id' => 1,
         ];
     }
 }

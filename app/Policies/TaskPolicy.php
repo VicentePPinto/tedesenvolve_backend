@@ -7,13 +7,13 @@ use App\Models\User;
 
 class TaskPolicy
 {
-
     /**
      * Determine whether the user can view the model.
      */
     public function index(User $authUser, Task $task): bool
     {
         return false;
+
         return $this->canAccessTask($authUser, $task);
     }
 
@@ -21,27 +21,29 @@ class TaskPolicy
      * Determine whether the user can create models.
      */
     public function create(User $user, array $data): bool
-{
-    return $user->type === 'admin' || $user->id === $data['user_id'];
-}
+    {
+        return $user->type === 'admin' || $user->id === $data['user_id'];
+    }
 
     /**
      * Determine whether the user can view the model.
      */
-    public function view( Task $task): bool
+    public function view(Task $task): bool
     {
-        
+
         $authUser = auth()->user();
+
         return $this->canAccessTask($authUser, $task);
     }
+
     /**
      * Determine whether the user can view the model.
      */
     public function viewAny(): bool
     {
-  
+
         $authUser = auth()->user();
-   
+
         return $authUser->type === 'admin';
     }
 
@@ -79,7 +81,7 @@ class TaskPolicy
 
     public function getTasksInPeriod(User $user, array $data): bool
     {
-        
+
         return $user->type === 'admin' || $user->id === $data['user_id'];
     }
 

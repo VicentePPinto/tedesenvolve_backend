@@ -14,6 +14,10 @@ return new class() extends Migration
         Schema::create('task_categories', function (Blueprint $table) {
             $table->id();
             $table->string('category');
+            $table->foreignId('company_id')
+                ->constrained()
+                ->onUpdate('CASCADE')
+                ->onDelete('CASCADE');
             $table->timestamps();
         });
     }

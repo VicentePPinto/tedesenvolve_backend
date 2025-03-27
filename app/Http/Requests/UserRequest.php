@@ -27,7 +27,8 @@ class UserRequest extends FormRequest
             'email' => 'sometimes|email|unique:users,email',
             'password' => 'sometimes|string|min:6|confirmed',
             'avatar' => 'sometimes|url',
-            'type' => 'sometimes|string|in:admin,user', // Ajuste conforme necessário
+            'type' => 'sometimes|string|in:admin,user',
+            'company_id' => ['required', 'exists:companies,id'],
 
         ];
     }

@@ -6,11 +6,15 @@ use App\Http\Requests\TaskRequest;
 use App\Http\Requests\TaskUserRequest;
 use App\Http\Resources\TaskResource;
 use App\Models\Task;
+use App\Models\Traits\HasCompanyScope;
 use App\Services\TaskService;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+
 class TaskController extends Controller
 {
     use AuthorizesRequests;
+    use HasCompanyScope;
+
     protected TaskService $taskService;
 
     public function __construct(TaskService $taskService)
@@ -23,7 +27,7 @@ class TaskController extends Controller
      */
     public function index()
     {
-      
+
         $this->authorize('viewAny', Task::class);
         $tasks = Task::all();
 
@@ -35,9 +39,9 @@ class TaskController extends Controller
      */
     public function store(TaskRequest $taskRequest)
     {
-             
+
         $this->authorize('create', [Task::class, $taskRequest->validated()]);
-    
+
         $task = Task::create($taskRequest->all());
 
         return response()->json($task, 201);
@@ -51,6 +55,7 @@ class TaskController extends Controller
     {
         //
         $this->authorize('view', $task);
+
         return new TaskResource($task);
     }
 
@@ -79,17 +84,18 @@ class TaskController extends Controller
 
         return response()->json(null, 204);
     }
-    public function getTasksInPeriod( TaskUserRequest $taskUserRequest)
+
+    public function getTasksInPeriod(TaskUserRequest $taskUserRequest)
     {
-        
+
         $this->authorize('getTasksInPeriod', [Task::class, $taskUserRequest->validated()]);
 
-    $tasks = $this->taskService->getUserTasksInPeriod(
-        $taskUserRequest->user_id,
-        $taskUserRequest->getStartDate(),
-        $taskUserRequest->getEndDate()
-    );
+        $tasks = $this->taskService->getUserTasksInPeriod(
+            $taskUserRequest->user_id,
+            $taskUserRequest->getStartDate(),
+            $taskUserRequest->getEndDate()
+        );
 
-    return TaskResource::collection($tasks);
+        return TaskResource::collection($tasks);
     }
 }

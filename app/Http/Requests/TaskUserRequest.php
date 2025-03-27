@@ -28,6 +28,7 @@ class TaskUserRequest extends FormRequest
             'end_date' => ['date', 'after_or_equal:start_date'],
         ];
     }
+
     public function messages(): array
     {
         return [
@@ -41,12 +42,12 @@ class TaskUserRequest extends FormRequest
     }
 
     public function getStartDate(): Carbon
-{
-    return Carbon::parse($this->validated()['start_date']);
-}
+    {
+        return Carbon::parse($this->validated()['start_date']);
+    }
 
-public function getEndDate(): Carbon
-{
-    return Carbon::parse($this->validated()['end_date']);
-}
+    public function getEndDate(): Carbon
+    {
+        return Carbon::parse($this->validated()['end_date']);
+    }
 }

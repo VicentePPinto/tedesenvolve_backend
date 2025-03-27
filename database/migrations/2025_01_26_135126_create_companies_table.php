@@ -11,13 +11,14 @@ return new class() extends Migration
      */
     public function up(): void
     {
-        Schema::create('task_states', function (Blueprint $table) {
+        Schema::create('companies', function (Blueprint $table) {
             $table->id();
-            $table->string('state');
-            $table->foreignId('company_id')
-                ->constrained()
-                ->onUpdate('CASCADE')
-                ->onDelete('CASCADE');
+            $table->string('name');
+            $table->string('name_fantasy');
+            $table->string('cnpj')->unique();
+            $table->string('email')->unique()->nullable();
+            $table->string('logo')->nullable();
+            $table->string('website')->nullable();
             $table->timestamps();
         });
     }
@@ -27,6 +28,6 @@ return new class() extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('task_states');
+        Schema::dropIfExists('companies');
     }
 };

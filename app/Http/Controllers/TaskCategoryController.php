@@ -3,10 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Models\TaskCategory;
+use App\Models\Traits\HasCompanyScope;
 use Illuminate\Http\Request;
 
 class TaskCategoryController extends Controller
 {
+    use HasCompanyScope;
+
     /**
      * Display a listing of the resource.
      */

@@ -21,6 +21,7 @@ class TaskCategoryFactory extends Factory
     {
         return [
             'category' => $this->faker->word,
+            'company_id' => 1,
         ];
     }
 }
